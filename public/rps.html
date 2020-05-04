@@ -1,0 +1,157 @@
+<div id="RPSGame" ng-controller="RPSGamesCtrl" class="d-flex h-100 flex-column">
+  <div class="banner w-100">
+    <div class="d-flex">
+      <div class="p-1">
+        {{score}} pts
+      </div>
+      <div class="p-1 ml-auto mr-auto">
+        <!-- {{timer}} // placeholder for a timer?? -->
+      </div>
+      <div class="p-1">
+        <i class="fas fa-award"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="ai-area mt-3">
+    <div class="playerName">AI</div>
+    <img ng-show="_aiChoice" src="/img/{{aiChoice}}.png">
+  </div>
+  <div class="result-area">{{wld}}</div>
+  <div class="player-area">
+    <img ng-show="_playerChoice" src="/img/{{playerChoice}}.png">
+    <div class="playerName">You</div>
+  </div>
+
+  <div ng-show="_Controls" class="mt-auto p-2 rps-controls">
+    <div class="container-fluid">
+      <div class="row">
+        <button ng-click="select(0)" ng-disabled="_disabledControls" class="col-4"><img src="/img/rock.png" class="img-fluid"></button>
+        <button ng-click="select(1)" ng-disabled="_disabledControls" class="col-4"><img src="/img/paper.png" class="img-fluid"></button>
+        <button ng-click="select(2)" ng-disabled="_disabledControls" class="col-4"><img src="/img/scissors.png" class="img-fluid"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+  angular.module('RPSGame', [])
+    .controller('RPSGamesCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
+      $scope._Title = true;
+      $scope.title = "Rock, Paper, Scissors";
+      $scope.score = 0;
+      $scope.timer = 30;
+
+      $scope.wld = '';
+
+      var data = 
+      {
+        "id"  : socket.id,
+         "msg": "RPS"
+      };
+
+      socket.emit('NewGame', data);
+
+      socket.on('BeginGame', function() {
+        $scope._Controls = true;
+        $scope.score = 0;
+        $scope.$apply();
+      });
+
+      socket.on('EndGame', function() {
+        $scope._Controls = false;
+        data.msg = $scope.score;
+        socket.emit("SendScore", data)
+        $scope.$apply();
+      });
+
+      var options = ['Rock', 'Paper', 'Scissors'];
+
+      $scope.select = function(playerNum) {
+        $scope._aiChoice = true;
+        $scope._playerChoice = true;
+        var aiNum = Math.floor(Math.random() * Math.floor(3));
+
+        $scope.playerChoice = options[playerNum].toLowerCase();
+        $scope.aiChoice = options[aiNum].toLowerCase();
+
+        $scope.checkWinner(playerNum, aiNum);
+
+        $scope._disabledControls = true;
+        console.log('_disabledControls = ' + true);
+        $timeout( function(){ $scope.enableControls(); }, 3 * 1000);
+      }
+
+      $scope.checkWinner = function(playerNum, aiNum) {
+        switch(playerNum) {
+          case 0:
+            switch(aiNum) {
+              case 0:
+                $scope.wld = 'Draw';
+                break;
+              case 1:
+                $scope.wld = 'Lose';
+                break
+              case 2:
+                $scope.wld = 'Win';
+                break;
+            }
+            break;
+          case 1:
+            switch(aiNum) {
+              case 0:
+                $scope.wld = 'Win';
+                break;
+              case 1:
+                $scope.wld = 'Draw';
+                break
+              case 2:
+                $scope.wld = 'Lose';
+                break;
+            }
+            break;
+          case 2:
+            switch(aiNum) {
+              case 0:
+                $scope.wld = 'Lose';
+                break;
+              case 1:
+                $scope.wld = 'Win';
+                break
+              case 2:
+                $scope.wld = 'Draw';
+                break;
+            }
+            break;
+        }
+        $scope.result();
+      }
+
+      $scope.result = function() {
+        switch($scope.wld){
+          case 'Win':
+            $scope.score += 1;
+            break;
+          case 'Lose': case 'Draw':
+            break;
+        }
+      }
+
+      $scope.enableControls = function() {
+        $scope._disabledControls = false;
+        console.log('_disabledControls = ' + false)
+        //$scope._disabledControls = false;
+        //console.log('_disabledControls = ' + false)
+        $scope.wld = '';
+        $scope._playerChoice = false;
+        $scope._aiChoice = false;
+      }
+    }]);
+
+  angular.element(function() {
+    angular.bootstrap($('#RPSGame'), ['RPSGame']);
+  });
+
+</script>

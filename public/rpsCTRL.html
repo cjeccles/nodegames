@@ -1,0 +1,43 @@
+<div id="RPSGame" ng-controller="RPSGameCtrl">
+    <h1>{{title}} Controls</h1>
+    <button ng-disabled="roundLive" ng-click="newRound();">Begin Round</button>
+    <span ng-show="roundLive">{{timer}} seconds remaining...</span>
+</div>
+
+<script>
+
+  angular.module('RPSGame', [])
+    .controller('RPSGameCtrl', ['$scope', '$timeout', '$interval', function ($scope, $timeout, $interval) {
+      $scope.title = "Rock, Paper, Scissors";
+           
+      $scope.newRound = function() {
+        $scope.roundLive = true;
+        $scope.timer = 60;
+        console.log($scope.title + ' round has been started.');
+        socket.emit('RPSNewRound');
+        $timeout( function(){ $scope.endRound(); }, $scope.timer * 1000);
+        $scope.countdownTimer = $interval( function() {
+          $scope.timer -= 1;
+        }, 1000);
+      }
+
+      $scope.endRound = function() {
+        $scope.roundLive = false;
+        $interval.cancel($scope.countdownTimer);
+        console.log($scope.title + ' round has been ended.');
+        socket.emit('RPSEndRound');
+      }
+
+
+      //socket.emit('NewGame', "RPS");
+
+      /*socket.on('newGame', function(msg) {
+          
+      });*/
+    }]);
+
+  angular.element(function() {
+    angular.bootstrap($('#RPSGame'), ['RPSGame']);
+  });
+
+</script>

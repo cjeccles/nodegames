@@ -1,0 +1,97 @@
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  background-image: linear-gradient(-180deg, #00384e, #01597c);
+  font-family: "Varela Round";
+}
+.banner {
+  height: 80px;
+  background: #012e41;
+}
+
+.banner > div {
+  color: rgba(255,255,255,.8);
+  padding: 1rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.banner i {
+  color: rgba(255,255,255,.8);
+  font-size: 2.5rem;
+}
+
+h1 {
+  color: #fff;
+  text-align: center;
+}
+
+#title {
+  color: rgba(255,255,255,1);
+}
+
+.ai-area, .player-area {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  max-height: 30%;
+}
+
+.result-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 5rem;
+  height: 5rem;
+}
+
+.rps-controls {
+  height: 140px;
+  text-align: center;
+}
+
+.rps-controls button {
+  background-color: transparent;
+  border: none;
+}
+
+.rps-controls button:disabled {
+  opacity: 0.5;
+}
+
+.rps-controls img {
+  max-height: 100px;
+}
+
+.playerName {
+  color: #fff;
+  font-size: 2rem;
+}
+
+
+
+
+/*********
+Lobby Styling
+**********/
+.ui-block {
+  background: #fff;
+  width: 80vw;
+  border-radius: .5rem;
+  margin:auto;
+  text-align: center;
+  padding: 1rem;
+  box-shadow: px 0px 4px #000;
+}
+
+.teamcolor {
+  border: 1px solid #e2e4e6;
+  width: 100px;
+  min-height: 100px;
+  margin: 1.5rem auto;
+}

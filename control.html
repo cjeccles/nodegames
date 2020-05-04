@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Control Page</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  </head>
+  <body>
+    <div ng-app="NodeGames" ng-controller="NodeGamesCtrl">
+      <h1 ng-show="_Title">{{title}}</h1>
+
+      <button ng-click="startGame('rps')"> START RPS </button>
+      <button ng-click="startGame('quiz')"> START Quiz </button>
+      <button ng-click="logScoresInServer()"> Log scores in Server </button>
+    </div>
+    <div id="thegameCTRLs">
+
+    </div>
+  </body>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+  <script>
+
+    var socket = io();
+    var app = angular.module('NodeGames', []);
+
+    app.controller('NodeGamesCtrl', function($scope) {
+
+      $scope._Title = true;
+
+      $scope.title = 'Control Page';
+
+      $scope.startGame = function(game) {
+        // send message to server to load game on client devices
+        socket.emit('LoadGame', game);
+
+        // load the controls for the game locally on the Control Page
+        $.ajax({
+          method: "GET",
+          url: '/' + game + 'CTRL.html',
+          dataType: "html"
+        }).done(function(page) {
+          $('#thegameCTRLs').html(page);
+        });
+        console.log(game + ' Started');
+      }
+
+      $scope.logScoresInServer = function() {
+        socket.emit('LogScores');
+      }
+
+    });
+
+  </script>
+
+</html>

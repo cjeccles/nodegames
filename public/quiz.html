@@ -1,0 +1,27 @@
+<div id="QuizGame" ng-controller="QuizGameCtrl">
+  <h1>Welcome to the {{title}}</h1>
+</div>
+
+<script>
+
+  angular.module('QuizGame', [])
+    .controller('QuizGameCtrl', ['$scope', function ($scope) {
+      $scope._Title = true;
+      $scope.title = "Quiz";
+      
+      socket.emit('NewGame', "Quiz");
+
+    }]);
+
+    angular.element(function() {
+      angular.bootstrap($('#QuizGame'), ['QuizGame']);
+  });
+
+  /*var app = angular.module('QuizGame', []);
+
+  app.controller('QuizGameCtrl', function($scope) {
+    //$scope._Title = true;
+    $scope.title = "Quiz";
+  });*/
+
+</script>
